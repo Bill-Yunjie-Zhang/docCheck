@@ -118,6 +118,8 @@
         }
 
         const handleClick = () => {
+            document.getElementById("text1").innerHTML = ""
+            document.getElementById("text2").innerHTML = ""
             let txt1 = document.getElementById("input1").value
             let txt2 = document.getElementById("input2").value
             checkDifference(txt1, txt2)
