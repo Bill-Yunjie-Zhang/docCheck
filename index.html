@@ -39,6 +39,7 @@
             color: #ffffff;
             border: none;
             margin: auto;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -65,8 +66,8 @@
 
     <script>
         const checkDifference = (text1, text2) => {
-            let text1Array = text1.replace(/ /g, "").replace(/\t/g, "").split("\n")
-            let text2Array = text2.replace(/ /g, "").replace(/\t/g, "").split("\n")
+            let text1Array = text1.replace(/ /g, "").replace(/\t/g, "").split("\n").join("，").split("，")
+            let text2Array = text2.replace(/ /g, "").replace(/\t/g, "").split("\n").join("，").split("，")
             let similarity = []
             text1Array.forEach(ele1 => {
                 text2Array.forEach(ele2 => {
