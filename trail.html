@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Check</title>
+    <style>
+        .red {
+            color: red
+        }
+
+        ::-webkit-scrollbar {
+            width: 0px
+        }
+
+        #input1 {
+            height: 500px;
+            overflow-y: scroll;
+            width: 49%;
+            outline: none;
+            float: left;
+            margin: none
+        }
+
+        #input2 {
+            height: 500px;
+            overflow-y: scroll;
+            width: 49%;
+            outline: none;
+            float: left;
+            margin: none
+        }
+
+        #button1 {
+            width: 100%;
+            height: 44px;
+            background-color: #1865f2;
+            color: #ffffff;
+            border: none;
+            margin: auto;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1 style="text-align: center;">Doc Difference Check</h1>
+    </div>
+    <div>
+        <textarea id="input1" maxlength="number" placeholder="file1"></textarea>
+        <textarea id="input2" maxlength="number" placeholder="file2"></textarea>
+        <div style="width: 25%; height: 44px; margin: auto;">
+            <button id="button1" onclick=handleClick()>Start Difference Check</button>
+        </div>
+    </div>
+    <div>
+        <div id="text1"
+            style="position: relative; top: 44px; width: 50%; height: 500px; overflow-y:scroll;float: left;">
+
+        </div>
+        <div id="text2"
+            style="position: relative; top: 44px; width: 50%; height: 500px; overflow-y:scroll;float: left;">
+
+        </div>
+    </div>
+
+    <script>
+        const checkDifference = (text1, text2) => {
+            let text1Array = text1.replace(/ /g, "").replace(/\t/g, "").split("\n")
+            let text1ArrayOfArray = text1Array.map(e => e.split("，").join("、").split("、").join("。").split("。").join("：").split("："))
+            let text2Array = text2.replace(/ /g, "").replace(/\t/g, "").split("\n")
+            let text2ArrayOfArray = text2Array.map(e => e.split("，").join("、").split("、").join("。").split("。").join("：").split("："))
+
+            // console.log(text1ArrayOfArray, text2ArrayOfArray)
+            let similarity = []
+            text1ArrayOfArray.forEach(ele1 => {
+                text2ArrayOfArray.forEach(ele2 => {
+                    let similarityInner = []
+                    ele1.forEach(ele1Inner => {
+                        ele2.forEach(ele2Inner => {
+                            if (ele1Inner === ele2Inner) {
+                                similarityInner.push(ele1Inner)
+                            }
+                        })
+                    })
+                    if (similarityInner.length !== 0) {
+                        similarity.push(similarityInner)
+                    }
+                })
+            });
+            let similarityWithOutNothing = []
+            similarity.forEach(e => {
+                let similarityWithOutNothingInner = []
+                e.forEach(ele => {
+                    if (ele !== "") {
+                        similarityWithOutNothingInner.push(ele)
+                    }
+                })
+                if (similarityWithOutNothingInner.length !== 0) {
+                    similarityWithOutNothing.push(similarityWithOutNothingInner)
+                }
+            })
+
+            let joined1Array = text1ArrayOfArray.map(e => e.join("，"))
+            let joined2Array = text2ArrayOfArray.map(e => e.join("，"))
+            let joinedSameArray = similarityWithOutNothing.map(e => e.join("，"))
+
+            let sameTojoined1ArrayIndex = []
+            let sameTojoined2ArrayIndex = []
+            joinedSameArray.forEach(e => {
+                sameTojoined1ArrayIndex.push(joined1Array.findIndex(ele => {
+                    return ele === e
+                }))
+            })
+            joinedSameArray.forEach(e => {
+                sameTojoined2ArrayIndex.push(joined2Array.findIndex(ele => {
+                    return ele === e
+                }))
+            })
+            
+            console.log(text1ArrayOfArray.length, text2ArrayOfArray.length)
+            // console.log(joined1Array, joined2Array, joinedSameArray)
+
+            for (ii = 0; ii < joined1Array.length; ii++) {
+                document.getElementById("text1").appendChild(document.createElement("h6"))
+                if (sameTojoined1ArrayIndex.findIndex(e => e === ii) === -1) {
+                    for(jj = 0; jj < text1ArrayOfArray[ii].length; jj++){
+                        document.getElementById("text1").getElementsByTagName("h6")[ii].appendChild(document.createElement("span"))
+                        if(text1ArrayOfArray[ii][jj] !== text2ArrayOfArray[ii][jj]){
+                            // console.log("Hello1")
+                            document.getElementById("text1").getElementsByTagName("h6")[ii].getElementsByTagName("span")[jj].setAttribute("class", "red")
+                            document.getElementById("text1").getElementsByTagName("h6")[ii].getElementsByTagName("span")[jj].innerHTML = text1ArrayOfArray[ii][jj] + " "
+                        } else {
+                            document.getElementById("text1").getElementsByTagName("h6")[ii].getElementsByTagName("span")[jj].innerHTML = text1ArrayOfArray[ii][jj] + " "
+                        }
+                    }
+                } else {
+                    document.getElementById("text1").getElementsByTagName("h6")[ii].innerHTML = joined1Array[ii]
+                }
+            }
+            for (ii = 0; ii < joined2Array.length; ii++) {
+                document.getElementById("text2").appendChild(document.createElement("h6"))
+                if (sameTojoined2ArrayIndex.findIndex(e => e === ii) === -1) {
+                    for(jj = 0; jj < text2ArrayOfArray[ii].length; jj++){
+                        document.getElementById("text2").getElementsByTagName("h6")[ii].appendChild(document.createElement("span"))
+                        if(text1ArrayOfArray[ii][jj] !== text2ArrayOfArray[ii][jj]){
+                            console.log("Hello2")
+                            document.getElementById("text2").getElementsByTagName("h6")[ii].getElementsByTagName("span")[jj].setAttribute("class", "red")
+                            document.getElementById("text2").getElementsByTagName("h6")[ii].getElementsByTagName("span")[jj].innerHTML = text2ArrayOfArray[ii][jj] +  " "
+                        } else {
+                            document.getElementById("text2").getElementsByTagName("h6")[ii].getElementsByTagName("span")[jj].innerHTML = text2ArrayOfArray[ii][jj] +  " "
+                        }
+                    }
+                } else {
+                    document.getElementById("text2").getElementsByTagName("h6")[ii].innerHTML = joined2Array[ii]
+                }
+            }
+        }
+
+        const handleClick = () => {
+            document.getElementById("text1").innerHTML = ""
+            document.getElementById("text2").innerHTML = ""
+            let txt1 = document.getElementById("input1").value
+            let txt2 = document.getElementById("input2").value
+            checkDifference(txt1, txt2)
+        }
+
+    </script>
+</body>
+
+</html>

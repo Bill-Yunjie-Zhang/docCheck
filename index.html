@@ -83,20 +83,20 @@
                     similarityWithOutNothing.push(e)
                 }
             })
-            let sameIndexToModel = []
-            let differenceTotext2 = []
+            let sameTotext1 = []
+            let sameTotext2 = []
             similarityWithOutNothing.forEach(e => {
-                sameIndexToModel.push(text1Array.findIndex(ele => {
+                sameTotext1.push(text1Array.findIndex(ele => {
                     return ele === e
                 }))
             })
             similarityWithOutNothing.forEach(e => {
-                differenceTotext2.push(text2Array.findIndex(ele => {
+                sameTotext2.push(text2Array.findIndex(ele => {
                     return ele === e
                 }))
             })
             for (ii = 0; ii < text1Array.length; ii++) {
-                if (sameIndexToModel.findIndex(e => e === ii) === -1) {
+                if (sameTotext1.findIndex(e => e === ii) === -1) {
                     document.getElementById("text1").appendChild(document.createElement("h6"))
                     document.getElementById("text1").getElementsByTagName("h6")[ii].setAttribute("class", "red")
                     document.getElementById("text1").getElementsByTagName("h6")[ii].innerHTML = text1Array[ii]
@@ -106,7 +106,7 @@
                 }
             }
             for (ii = 0; ii < text2Array.length; ii++) {
-                if (differenceTotext2.findIndex(e => e === ii) === -1) {
+                if (sameTotext2.findIndex(e => e === ii) === -1) {
                     document.getElementById("text2").appendChild(document.createElement("h6"))
                     document.getElementById("text2").getElementsByTagName("h6")[ii].setAttribute("class", "red")
                     document.getElementById("text2").getElementsByTagName("h6")[ii].innerHTML = text2Array[ii]
